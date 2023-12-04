@@ -20,6 +20,19 @@
         app:layout_constraintVertical_bias="0.008"
         android:gravity="center">
 
+        <TextView
+            android:id="@+id/txtView"
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Select instrument:"
+            android:textSize="20dp" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignBottom="@id/txtView"/>
 
         <!-- Rewind Button -->
         <ImageButton

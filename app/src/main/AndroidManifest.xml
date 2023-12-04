@@ -23,7 +23,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PianoActivity.PianoActivity"
+            android:name=".Instruments.PianoActivity"
+            android:screenOrientation="landscape">
+            <!-- Other activity attributes and intent filters go here -->
+        </activity>
+        <activity
+            android:name=".Instruments.DrumpadActivity"
             android:screenOrientation="landscape">
             <!-- Other activity attributes and intent filters go here -->
         </activity>

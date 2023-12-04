@@ -1,11 +1,10 @@
-package com.example.mobiledaw.PianoActivity
+package com.example.mobiledaw.Instruments
 import android.media.AudioAttributes
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.media.SoundPool
 import android.os.Handler
-import android.util.Log
 import com.example.mobiledaw.R
 
 class PianoActivity : AppCompatActivity() {
