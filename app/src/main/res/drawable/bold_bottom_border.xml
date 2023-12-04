@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- bold_bottom_border.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:bottom="12dp"
+        android:left="-4dp"
+        android:right="-4dp"
+        android:top="-4dp">
+    <shape android:shape="rectangle">
+        <solid android:color="#B4B8C7" /> <!-- Adjust the color of the bold bottom border -->
+    </shape>
+</item>
+    </layer-list>
