@@ -18,13 +18,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.008"
-        android:gravity="center">
+        android:gravity="left">
+
+        <!-- Rewind Button -->
+
+        <!-- Record Button -->
 
         <TextView
             android:id="@+id/txtView"
             android:layout_width="175dp"
-            android:layout_height="wrap_content"
+            android:layout_height="39dp"
             android:layout_gravity="center"
+            android:layout_marginStart="20dp"
             android:text="Select instrument:"
             android:textSize="20dp" />
 
@@ -32,22 +37,19 @@
             android:id="@+id/spinner"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_alignBottom="@id/txtView"/>
+            android:layout_gravity="center"
+            android:layout_alignBottom="@id/txtView" />
 
-        <!-- Rewind Button -->
         <ImageButton
             android:id="@+id/rewindButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="8dp"
             android:background="@color/lightGrey"
-            android:src="@drawable/ic_rewind"
-            android:padding="16dp">
+            android:src="@drawable/ic_rewind">
 
 
         </ImageButton>
-
-        <!-- Record Button -->
 
         <ImageButton
             android:id="@+id/recordButton"
@@ -62,20 +64,21 @@
         </ImageButton>
 
         <!-- Play Button -->
+
+
+        <!-- Placeholder View with Light Background -->
         <ImageButton
             android:id="@+id/playButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="8dp"
             android:background="@color/lightGrey"
-            android:src="@drawable/ic_play_button"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:src="@drawable/ic_play_button">
 
 
         </ImageButton>
 
-
-        <!-- Placeholder View with Light Background -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -108,7 +111,6 @@
             android:layout_height="60dp"
             android:background="@drawable/bold_bottom_border"
             android:elevation="5dp"
-            android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 

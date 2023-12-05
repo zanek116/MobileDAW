@@ -13,6 +13,7 @@ import android.media.SoundPool
 import android.os.Environment
 import android.os.Handler
 import android.util.Log
+import android.view.MotionEvent
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -31,10 +32,6 @@ class PianoActivity : AppCompatActivity() {
     private val recordedNotes = mutableListOf<Pair<Int, Int>>()
     private var playbackIndex = 0
     private var lastRecordedNoteTime = 0L
-
-
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,14 +83,62 @@ class PianoActivity : AppCompatActivity() {
 
         loadSounds()
 
+
+
+
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN,
+            MotionEvent.ACTION_POINTER_DOWN -> {
+                val pointerIndex = event.actionIndex
+                val pointerId = event.getPointerId(pointerIndex)
+                val pressure = event.getPressure(pointerIndex)
+
+                Log.d("Pressure", "Pointer $pointerId Pressure: $pressure")
+            }
+        }
+        return true
     }
 
     private fun toggleRecording() {
         isRecording = !isRecording
 
         if (isRecording) {
-            recordedNotes.clear() // Clear existing recorded notes when starting a new recording
-            lastRecordedNoteTime = System.currentTimeMillis()
+            recordedNotes.clear()
+            lastRecordedNoteTime = System.currentTimeMillis() // Record the time when recording starts
+        }
+    }
+
+    private fun playSound(buttonId: Int) {
+        val soundId = soundMap[buttonId] ?: return
+        val currentTime = System.currentTimeMillis()
+
+        if (isRecording) {
+            val timeBetweenNotes = currentTime - lastRecordedNoteTime
+            lastRecordedNoteTime = currentTime // Update the last recorded note time
+            recordedNotes.add(Pair(buttonId, timeBetweenNotes.toInt())) // Store the buttonId and timeBetweenNotes as a Pair
+            println("recordedNotes after adding new note: $recordedNotes")
+        }
+
+        val streamId = soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
+
+        val shorterDuration = 300
+        Handler().postDelayed({
+            soundPool.stop(streamId)
+        }, shorterDuration.toLong())
+    }
+
+    private fun playNextRecordedNote() {
+        if (playbackIndex < recordedNotes.size) {
+            val (noteId, timeBetweenNotes) = recordedNotes[playbackIndex]
+
+            Handler().postDelayed({
+                playSound(noteId)
+                playbackIndex++
+                playNextRecordedNote()
+            }, timeBetweenNotes.toLong())
         }
     }
 
@@ -101,19 +146,6 @@ class PianoActivity : AppCompatActivity() {
         playbackIndex = 0
         playNextRecordedNote()
     }
-
-    private fun playNextRecordedNote() {
-        if (playbackIndex < recordedNotes.size) {
-            val (noteId, timeBetweenNotes) = recordedNotes[playbackIndex]
-            playSound(noteId)
-
-            Handler().postDelayed({
-                playbackIndex++
-                playNextRecordedNote()
-            }, timeBetweenNotes.toLong())
-        }
-    }
-
 
 
 
@@ -164,23 +196,6 @@ class PianoActivity : AppCompatActivity() {
         return resId
     }
 
-    private fun playSound(buttonId: Int) {
-        val soundId = soundMap[buttonId] ?: return
-        val streamId = soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-
-        if (isRecording) {
-            val currentTime = System.currentTimeMillis()
-            val timeBetweenNotes = currentTime - lastRecordedNoteTime
-            recordedNotes.add(buttonId to timeBetweenNotes.toInt())
-        }
-        // Adjust the duration to make the sound play shorter (e.g., 300 milliseconds)
-        val shorterDuration = 300
-
-        // Use a Handler to stop the sound after the specified duration
-        Handler().postDelayed({
-            soundPool.stop(streamId)
-        }, shorterDuration.toLong())
-    }
 
     private fun octaveUp() {
         if (currentOctave < 5) {
