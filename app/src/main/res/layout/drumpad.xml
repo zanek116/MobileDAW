@@ -17,6 +17,36 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.454" />
 
+    <ImageButton
+        android:id="@+id/drumpadRecord"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="8dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/lightGrey"
+        android:padding="16dp"
+        android:src="@drawable/ic_record_button"
+        app:layout_constraintBottom_toTopOf="@+id/topGuideline"
+        app:layout_constraintStart_toEndOf="@+id/drumpadHome"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageButton
+        android:id="@+id/drumpadPlay"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="8dp"
+        android:layout_marginStart="16dp"
+        android:background="@color/lightGrey"
+        android:padding="16dp"
+        android:src="@drawable/ic_play_button"
+        app:layout_constraintBottom_toTopOf="@+id/topGuideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.01"
+        app:layout_constraintStart_toEndOf="@+id/drumpadRecord"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.509"/>
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/topGuideline"
         android:layout_width="wrap_content"
