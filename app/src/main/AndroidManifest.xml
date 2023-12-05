@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 
     <application
         android:allowBackup="true"
@@ -25,12 +28,10 @@
         <activity
             android:name=".Instruments.PianoActivity"
             android:screenOrientation="landscape">
-            <!-- Other activity attributes and intent filters go here -->
         </activity>
         <activity
             android:name=".Instruments.DrumpadActivity"
             android:screenOrientation="landscape">
-            <!-- Other activity attributes and intent filters go here -->
         </activity>
 
     </application>

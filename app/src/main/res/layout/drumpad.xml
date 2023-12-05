@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     android:background="@android:color/darker_gray">
 
+    <Button
+        android:id="@+id/drumpadHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Home"
+        app:layout_constraintBottom_toTopOf="@+id/topGuideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.454" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/topGuideline"
         android:layout_width="wrap_content"
@@ -34,7 +45,7 @@
             <Button
                 android:id="@+id/square1"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="152dp"
                 android:layout_weight="1"
                  />
 
@@ -70,7 +81,7 @@
         <Button
             android:id="@+id/square5"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="152dp"
             android:layout_weight="1"
          />
 
@@ -95,8 +106,6 @@
             android:layout_weight="1"
              />
     </LinearLayout>
-
-
 
 
 

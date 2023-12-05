@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MobileDAW</string>
     <string-array name="Instruments">
+        <item>Track</item>
         <item>Piano</item>
         <item>Drum Pad</item>
     </string-array>

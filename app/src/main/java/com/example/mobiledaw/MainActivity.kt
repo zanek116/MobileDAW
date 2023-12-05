@@ -30,9 +30,9 @@ class MainActivity : AppCompatActivity() {
     val drumpadActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             result: ActivityResult ->
         if(result.resultCode == RESULT_CANCELED){
-            Log.d("MainActivity","Switch to Drumpad Activity Cancelled")
+            Log.d("MainActivity","Switch to Drum Pad Activity Cancelled")
         }else{
-            Log.d("MainActivity", "Switched to Drumpad activity")
+            Log.d("MainActivity", "Switched to Drum Pad activity")
 
         }
     }
@@ -40,12 +40,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        //onClick functionality for inserting new GeoPhoto
-        findViewById<ImageButton>(R.id.recordButton).setOnClickListener {
-            startPiano()
-            finish()
-        }
 
         val instruments = resources.getStringArray(R.array.Instruments)
         val spinner = findViewById<Spinner>(R.id.spinner)
@@ -56,17 +50,21 @@ class MainActivity : AppCompatActivity() {
                 android.R.layout.simple_spinner_item, instruments
             )
             spinner.adapter = adapter
+            spinner.setSelection(0)
 
             spinner.post {
                 spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(parent: AdapterView<*>, view: View, num: Int, id: Long) {
-                        Toast.makeText(this@MainActivity, "Selected instrument: " + " " + instruments[num], Toast.LENGTH_SHORT).show()
-
-                        // Call the appropriate method based on the selected instrument
-                        when (instruments[num]) {
-                            "Piano" -> startPiano()
-                            "Drumpad" -> startDrumpad()
-                            // Add other instrument cases as needed
+                        Toast.makeText(this@MainActivity, "Selected instrument: " + instruments[num], Toast.LENGTH_SHORT).show()
+                        if (instruments[num] == "Piano") {
+                            startPiano()
+                            finish()
+                            Log.e("hereeeeee", instruments[num])
+                        }
+                        else if (instruments[num] == "Drum Pad") {
+                            startDrumpad()
+                            finish()
+                            Log.e("hereeeeee", instruments[num])
                         }
                     }
                     override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -80,10 +78,13 @@ class MainActivity : AppCompatActivity() {
         val pianoActivityIntent: Intent = Intent(this,PianoActivity::class.java)
         pianoActivityLauncher.launch(pianoActivityIntent)
 
+        //startActivity(pianoActivityIntent)
     }
     private fun startDrumpad(){
         val drumpadActivityIntent: Intent = Intent(this, DrumpadActivity::class.java)
         drumpadActivityLauncher.launch(drumpadActivityIntent)
+
+        //startActivity(drumpadActivityIntent)
 
     }
 

@@ -1,21 +1,42 @@
 package com.example.mobiledaw.Instruments
+import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.AudioAttributes
+import android.media.MediaPlayer
+import android.media.MediaRecorder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.media.SoundPool
+import android.os.Environment
 import android.os.Handler
+import android.util.Log
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.example.mobiledaw.MainActivity
 import com.example.mobiledaw.R
+import java.io.File
+import java.io.IOException
+
+private const val REQUEST_RECORD_AUDIO_PERMISSION = 200
 
 class PianoActivity : AppCompatActivity() {
+
+
 
     private lateinit var soundPool: SoundPool
     private var soundMap: Map<Int, Int> = mutableMapOf()
     private var currentOctave: Int = 3 // Initial octave
-
-    private var playbackIndex = 0
-    private val recordedNotes = mutableListOf<Int>()
     private var isRecording = false
+    private var mediaRecorder: MediaRecorder? = null
+    private val outputFile: String = "${Environment.getExternalStorageDirectory().absolutePath}/audio_record.3gp"
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,9 +53,9 @@ class PianoActivity : AppCompatActivity() {
             .build()
 
 
-
         findViewById<Button>(R.id.buttonOctaveUp).setOnClickListener { octaveUp() }
         findViewById<Button>(R.id.buttonOctaveDown).setOnClickListener { octaveDown() }
+        findViewById<Button>(R.id.pianoHome).setOnClickListener { returnHome() }
 
         findViewById<Button>(R.id.button1).setOnClickListener { playSound(R.id.button1) }
         findViewById<Button>(R.id.button2).setOnClickListener { playSound(R.id.button2) }
@@ -61,10 +82,113 @@ class PianoActivity : AppCompatActivity() {
         findViewById<Button>(R.id.blackButton8).setOnClickListener { playSound(R.id.blackButton8) }
         findViewById<Button>(R.id.blackButton9).setOnClickListener { playSound(R.id.blackButton9) }
         findViewById<Button>(R.id.blackButton10).setOnClickListener { playSound(R.id.blackButton10) }
-        findViewById<Button>(R.id.buttonRecord).setOnClickListener { toggleRecording() }
 
+        findViewById<Button>(R.id.buttonRecord).setOnClickListener { toggleRecord() }
+        findViewById<Button>(R.id.buttonPlayback).setOnClickListener { playRecordedAudio() }
+
+        checkAndRequestPermissions()
         loadSounds()
 
+    }
+
+    private fun toggleRecord() {
+        isRecording = !isRecording
+        if (isRecording) {
+            onRecord()
+        }
+        else {
+            onStopRecord()
+        }
+    }
+    private fun onRecord() {
+        if (!isRecording) {
+            initializeMediaRecorder()
+            startRecording()
+            isRecording = true
+        }
+    }
+
+    private fun onStopRecord() {
+        if (isRecording) {
+            stopRecording()
+            isRecording = false
+        }
+    }
+
+    private fun initializeMediaRecorder() {
+        mediaRecorder = MediaRecorder()
+        mediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
+        mediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
+        mediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
+        mediaRecorder?.setOutputFile(outputFile)
+    }
+
+    private fun startRecording() {
+        try {
+            mediaRecorder?.prepare()
+            mediaRecorder?.start()
+            // Now recording audio
+        } catch (e: IOException) {
+            // Handle exception
+        }
+    }
+
+    private fun stopRecording() {
+        try {
+            mediaRecorder?.stop()
+            mediaRecorder?.reset()
+            mediaRecorder?.release()
+            mediaRecorder = null
+            // Recording stopped, you can now use the recorded audio file
+        } catch (e: Exception) {
+            // Handle exception
+        }
+    }
+
+    private fun playRecordedAudio() {
+        val mediaPlayer = MediaPlayer()
+        try {
+            mediaPlayer.setDataSource(outputFile)
+            mediaPlayer.prepare()
+            mediaPlayer.start()
+
+            // Optionally, set an OnCompletionListener to release the MediaPlayer when playback completes
+            mediaPlayer.setOnCompletionListener {
+                mediaPlayer.release()
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Log.e("AudioRecording", "Error playing recorded audio: ${e.message}", e)
+        }
+    }
+
+// ... (your existing code)
+
+    private fun checkAndRequestPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                REQUEST_RECORD_AUDIO_PERMISSION
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permissions granted, you can now start recording
+            } else {
+                // Permissions not granted, handle accordingly
+            }
+        }
     }
 
 
@@ -125,34 +249,6 @@ class PianoActivity : AppCompatActivity() {
         }, shorterDuration.toLong())
     }
 
-    private fun playRecordedNotes() {
-        playbackIndex = 0
-        playNextRecordedNote()
-    }
-
-    private fun playNextRecordedNote() {
-        if (playbackIndex < recordedNotes.size) {
-            val noteId = recordedNotes[playbackIndex]
-            playSound(noteId)
-
-            // Delay before playing the next recorded note (adjust as needed)
-            val delayMillis = 500
-
-            Handler().postDelayed({
-                playbackIndex++
-                playNextRecordedNote()
-            }, delayMillis.toLong())
-        }
-    }
-
-    private fun toggleRecording() {
-        isRecording = !isRecording
-
-        if (isRecording) {
-            recordedNotes.clear() // Clear existing recorded notes when starting a new recording
-        }
-    }
-
     private fun octaveUp() {
         if (currentOctave < 5) {
             currentOctave++
@@ -171,4 +267,23 @@ class PianoActivity : AppCompatActivity() {
         super.onDestroy()
         soundPool.release()
     }
+
+    val homeActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            result: ActivityResult ->
+        if(result.resultCode == RESULT_CANCELED){
+            Log.d("MainActivity","Switch to Piano Activity Cancelled")
+        }else{
+            Log.d("MainActivity", "Switched to Piano activity")
+
+        }
+    }
+
+    private fun returnHome(){
+        val homeActivityIntent: Intent = Intent(this,MainActivity::class.java)
+        homeActivityLauncher.launch(homeActivityIntent)
+    }
+
+
+
+
 }
