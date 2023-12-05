@@ -19,10 +19,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.mobiledaw.MainActivity
 import com.example.mobiledaw.R
-import java.io.File
 import java.io.IOException
+import android.media.projection.MediaProjectionManager
+import androidx.activity.result.ActivityResultLauncher
 
-private const val REQUEST_RECORD_AUDIO_PERMISSION = 200
 
 class PianoActivity : AppCompatActivity() {
 
@@ -37,6 +37,12 @@ class PianoActivity : AppCompatActivity() {
 
 
 
+
+    // New variables for screen capture permission
+    private lateinit var mediaProjectionManager: MediaProjectionManager
+    private lateinit var requestScreenCaptureLauncher: ActivityResultLauncher<Intent>
+    private val RECORD_AUDIO_PERMISSION_REQUEST_CODE = 1
+    private val REQUEST_RECORD_AUDIO_PERMISSION = 200;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,6 +95,41 @@ class PianoActivity : AppCompatActivity() {
         checkAndRequestPermissions()
         loadSounds()
 
+        // Initialize screen capture permission variables
+        mediaProjectionManager = getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+        requestScreenCaptureLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    val data: Intent? = result.data
+                    handleScreenCaptureResult(data)
+                } else {
+                    // Handle denial or show a message to the user
+                }
+            }
+
+        // Check if the app has the RECORD_AUDIO permission
+        if (ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.RECORD_AUDIO
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.RECORD_AUDIO),
+                RECORD_AUDIO_PERMISSION_REQUEST_CODE
+            )
+        } else {
+            requestScreenCapture()
+        }
+    }
+
+    private fun requestScreenCapture() {
+        val screenCaptureIntent = mediaProjectionManager.createScreenCaptureIntent()
+        requestScreenCaptureLauncher.launch(screenCaptureIntent)
+    }
+
+    private fun handleScreenCaptureResult(data: Intent?) {
+        // Handle screen capture result, e.g., start capturing audio
     }
 
     private fun toggleRecord() {
