@@ -22,18 +22,16 @@ import com.example.mobiledaw.R
 import java.io.File
 import java.io.IOException
 
-private const val REQUEST_RECORD_AUDIO_PERMISSION = 200
-
 class PianoActivity : AppCompatActivity() {
-
-
 
     private lateinit var soundPool: SoundPool
     private var soundMap: Map<Int, Int> = mutableMapOf()
     private var currentOctave: Int = 3 // Initial octave
     private var isRecording = false
-    private var mediaRecorder: MediaRecorder? = null
-    private val outputFile: String = "${Environment.getExternalStorageDirectory().absolutePath}/audio_record.3gp"
+    private val recordedNotes = mutableListOf<Pair<Int, Int>>()
+    private var playbackIndex = 0
+    private var lastRecordedNoteTime = 0L
+
 
 
 
@@ -83,113 +81,43 @@ class PianoActivity : AppCompatActivity() {
         findViewById<Button>(R.id.blackButton9).setOnClickListener { playSound(R.id.blackButton9) }
         findViewById<Button>(R.id.blackButton10).setOnClickListener { playSound(R.id.blackButton10) }
 
-        findViewById<Button>(R.id.buttonRecord).setOnClickListener { toggleRecord() }
-        findViewById<Button>(R.id.buttonPlayback).setOnClickListener { playRecordedAudio() }
+        findViewById<Button>(R.id.buttonRecord).setOnClickListener { toggleRecording() }
+        findViewById<Button>(R.id.buttonPlayback).setOnClickListener { playRecordedNotes() }
 
-        checkAndRequestPermissions()
         loadSounds()
 
     }
 
-    private fun toggleRecord() {
+    private fun toggleRecording() {
         isRecording = !isRecording
+
         if (isRecording) {
-            onRecord()
-        }
-        else {
-            onStopRecord()
-        }
-    }
-    private fun onRecord() {
-        if (!isRecording) {
-            initializeMediaRecorder()
-            startRecording()
-            isRecording = true
+            recordedNotes.clear() // Clear existing recorded notes when starting a new recording
+            lastRecordedNoteTime = System.currentTimeMillis()
         }
     }
 
-    private fun onStopRecord() {
-        if (isRecording) {
-            stopRecording()
-            isRecording = false
+    private fun playRecordedNotes() {
+        playbackIndex = 0
+        playNextRecordedNote()
+    }
+
+    private fun playNextRecordedNote() {
+        if (playbackIndex < recordedNotes.size) {
+            val (noteId, timeBetweenNotes) = recordedNotes[playbackIndex]
+            playSound(noteId)
+
+            Handler().postDelayed({
+                playbackIndex++
+                playNextRecordedNote()
+            }, timeBetweenNotes.toLong())
         }
     }
 
-    private fun initializeMediaRecorder() {
-        mediaRecorder = MediaRecorder()
-        mediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
-        mediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
-        mediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB)
-        mediaRecorder?.setOutputFile(outputFile)
-    }
 
-    private fun startRecording() {
-        try {
-            mediaRecorder?.prepare()
-            mediaRecorder?.start()
-            // Now recording audio
-        } catch (e: IOException) {
-            // Handle exception
-        }
-    }
 
-    private fun stopRecording() {
-        try {
-            mediaRecorder?.stop()
-            mediaRecorder?.reset()
-            mediaRecorder?.release()
-            mediaRecorder = null
-            // Recording stopped, you can now use the recorded audio file
-        } catch (e: Exception) {
-            // Handle exception
-        }
-    }
 
-    private fun playRecordedAudio() {
-        val mediaPlayer = MediaPlayer()
-        try {
-            mediaPlayer.setDataSource(outputFile)
-            mediaPlayer.prepare()
-            mediaPlayer.start()
 
-            // Optionally, set an OnCompletionListener to release the MediaPlayer when playback completes
-            mediaPlayer.setOnCompletionListener {
-                mediaPlayer.release()
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-            Log.e("AudioRecording", "Error playing recorded audio: ${e.message}", e)
-        }
-    }
-
-// ... (your existing code)
-
-    private fun checkAndRequestPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                REQUEST_RECORD_AUDIO_PERMISSION
-            )
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permissions granted, you can now start recording
-            } else {
-                // Permissions not granted, handle accordingly
-            }
-        }
-    }
 
 
     private fun loadSounds() {
@@ -240,6 +168,11 @@ class PianoActivity : AppCompatActivity() {
         val soundId = soundMap[buttonId] ?: return
         val streamId = soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
 
+        if (isRecording) {
+            val currentTime = System.currentTimeMillis()
+            val timeBetweenNotes = currentTime - lastRecordedNoteTime
+            recordedNotes.add(buttonId to timeBetweenNotes.toInt())
+        }
         // Adjust the duration to make the sound play shorter (e.g., 300 milliseconds)
         val shorterDuration = 300
 
