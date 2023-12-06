@@ -5,5 +5,6 @@
         <item>Piano</item>
         <item>Drum Pad</item>
     </string-array>
+    <string name="save_recording">Save current recording</string>
 </resources>
 

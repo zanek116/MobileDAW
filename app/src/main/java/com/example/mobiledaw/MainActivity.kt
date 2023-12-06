@@ -73,18 +73,29 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        val recordedNotes = intent.getSerializableExtra("recordedNotes") as? Array<Pair<Int, Int>>
+
+        if (recordedNotes != null) {
+            for ((buttonId, timeBetweenNotes) in recordedNotes) {
+                Log.d("RecordedNote", "Button ID: $buttonId, Time Between Notes: $timeBetweenNotes")
+            }
+
+        }
+        else {
+            Log.d("Recorded Notes", "nah bruh")
+        }
+
     }
     private fun startPiano(){
         val pianoActivityIntent: Intent = Intent(this,PianoActivity::class.java)
         pianoActivityLauncher.launch(pianoActivityIntent)
 
-        //startActivity(pianoActivityIntent)
     }
     private fun startDrumpad(){
         val drumpadActivityIntent: Intent = Intent(this, DrumpadActivity::class.java)
         drumpadActivityLauncher.launch(drumpadActivityIntent)
 
-        //startActivity(drumpadActivityIntent)
 
     }
 

@@ -9,6 +9,7 @@ import android.media.MediaRecorder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.media.SoundPool
 import android.os.Environment
 import android.os.Handler
@@ -37,6 +38,8 @@ class PianoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.piano)
 
+
+
         // Initialize SoundPool
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
@@ -50,7 +53,7 @@ class PianoActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.buttonOctaveUp).setOnClickListener { octaveUp() }
         findViewById<Button>(R.id.buttonOctaveDown).setOnClickListener { octaveDown() }
-        findViewById<Button>(R.id.pianoHome).setOnClickListener { returnHome() }
+        findViewById<ImageButton>(R.id.pianoHome).setOnClickListener { returnHome() }
 
         findViewById<Button>(R.id.button1).setOnClickListener { playSound(R.id.button1) }
         findViewById<Button>(R.id.button2).setOnClickListener { playSound(R.id.button2) }
@@ -78,13 +81,11 @@ class PianoActivity : AppCompatActivity() {
         findViewById<Button>(R.id.blackButton9).setOnClickListener { playSound(R.id.blackButton9) }
         findViewById<Button>(R.id.blackButton10).setOnClickListener { playSound(R.id.blackButton10) }
 
-        findViewById<Button>(R.id.buttonRecord).setOnClickListener { toggleRecording() }
-        findViewById<Button>(R.id.buttonPlayback).setOnClickListener { playRecordedNotes() }
+        findViewById<ImageButton>(R.id.buttonRecord).setOnClickListener { toggleRecording() }
+        findViewById<ImageButton>(R.id.buttonPlayback).setOnClickListener { playRecordedNotes() }
+        findViewById<ImageButton>(R.id.buttonSaveTrack).setOnClickListener { saveTrack() }
 
         loadSounds()
-
-
-
 
     }
 
@@ -146,10 +147,6 @@ class PianoActivity : AppCompatActivity() {
         playbackIndex = 0
         playNextRecordedNote()
     }
-
-
-
-
 
 
     private fun loadSounds() {
@@ -231,7 +228,13 @@ class PianoActivity : AppCompatActivity() {
         homeActivityLauncher.launch(homeActivityIntent)
     }
 
-
-
-
+    private fun saveTrack()
+    {
+        val homeActivityTrackIntent: Intent = Intent(this, MainActivity::class.java)
+        homeActivityTrackIntent.putExtra("recordedNotes", recordedNotes.toTypedArray()) // Convert the MutableList to a List
+        //homeActivityLauncher.launch(homeActivityTrackIntent)
+        //setResult(RESULT_OK, intent)
+        //finish() // Finish the current activity
+        startActivity(homeActivityTrackIntent)
+    }
 }

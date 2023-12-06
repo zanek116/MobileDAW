@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray">
+    android:background="@color/lightGrey">
 
 
 
@@ -151,11 +151,12 @@
         style="@style/KeyboardKeyWhite"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:stateListAnimator="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/button13"
         app:layout_constraintStart_toEndOf="@id/button11"
-        android:stateListAnimator="@null"
-        app:layout_constraintTop_toTopOf="@id/topGuideline" />
+        app:layout_constraintTop_toTopOf="@id/topGuideline"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/button13"
@@ -321,39 +322,62 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.484" />
 
-    <Button
+
+    <ImageButton
         android:id="@+id/buttonRecord"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/lightGrey"
+        android:src="@drawable/ic_record_button"
         android:text="Record"
         app:layout_constraintBottom_toTopOf="@+id/topGuideline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.358"
+        app:layout_constraintHorizontal_bias="0.123"
         app:layout_constraintStart_toEndOf="@+id/buttonOctaveDown"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.49" />
+        app:layout_constraintVertical_bias="0.421" />
 
-    <Button
+    <ImageButton
         android:id="@+id/buttonPlayback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@color/lightGrey"
+        android:src="@drawable/ic_play_button"
         android:text="Play"
         app:layout_constraintBottom_toTopOf="@+id/topGuideline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.065"
-        app:layout_constraintStart_toEndOf="@+id/buttonOctaveDown"
+        app:layout_constraintHorizontal_bias="0.031"
+        app:layout_constraintStart_toEndOf="@+id/buttonRecord"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.49" />
+        app:layout_constraintVertical_bias="0.479" />
 
-    <Button
+    <ImageButton
         android:id="@+id/pianoHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="72dp"
+        android:background="@color/lightGrey"
+        android:src="@drawable/ic_back_icon"
         android:text="Home"
         app:layout_constraintBottom_toTopOf="@+id/topGuideline"
         app:layout_constraintEnd_toStartOf="@+id/buttonOctaveUp"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <ImageButton
+        android:id="@+id/buttonSaveTrack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/buttonPlayback"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.658"
+        app:layout_constraintStart_toEndOf="@+id/buttonPlayback"
+        app:layout_constraintTop_toTopOf="@id/buttonPlayback"
+        app:layout_constraintVertical_bias="0.074"
+        android:src="@drawable/ic_checkmark_icon"
+        android:background="@color/lightGrey"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
