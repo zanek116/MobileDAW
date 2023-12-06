@@ -1,33 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/darkGrey"
-    tools:context=".MainActivity">
+    android:background="@color/lightGrey">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="68dp"
-        android:background="@color/lightGrey"
-        android:elevation="8dp"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontalGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/verticalGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <!-- First LinearLayout with TextView -->
+
+    <!-- Second LinearLayout -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/horizontalGuideline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.008"
-        android:gravity="left">
-
-        <!-- Rewind Button -->
-
-        <!-- Record Button -->
+        android:orientation="horizontal"
+        >
 
         <TextView
             android:id="@+id/txtView"
-            android:layout_width="175dp"
+            android:layout_width="wrap_content"
             android:layout_height="39dp"
+            android:gravity="center"
             android:layout_gravity="center"
             android:layout_marginStart="20dp"
             android:text="Select instrument:"
@@ -44,108 +56,226 @@
             android:id="@+id/rewindButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_margin="8dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
             android:background="@color/lightGrey"
             android:src="@drawable/ic_rewind">
-
-
         </ImageButton>
 
         <ImageButton
             android:id="@+id/recordButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_margin="8dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
             android:background="@color/lightGrey"
-            android:src="@drawable/ic_record_button"
-            android:padding="16dp">
-
-
+            android:src="@drawable/ic_record_button">
         </ImageButton>
 
-        <!-- Play Button -->
-
-
-        <!-- Placeholder View with Light Background -->
         <ImageButton
             android:id="@+id/playButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_margin="8dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+
             android:background="@color/lightGrey"
-            android:padding="16dp"
             android:src="@drawable/ic_play_button">
-
-
         </ImageButton>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/lightGrey"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
 
 
     </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="229dp"
-        android:layout_height="337dp"
-        android:layout_marginTop="1dp"
-        android:background="@color/lightGrey"
-        android:orientation="vertical"
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintTop_toTopOf="@+id/horizontalGuideline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="@+id/verticalGuideline"
+        android:orientation="vertical">
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <TextView
+            android:id="@+id/TrackListText"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@drawable/bold_bottom_border"
-            android:elevation="5dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:text="Tracks"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            ></TextView>
+
+        <ListView
+            android:id="@+id/tracks"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/TrackListText"
+            />
 
 
-            <TextView
-                android:id="@+id/TrackListText"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:elevation="6dp"
-                android:fontFamily="sans-serif"
-                android:gravity="center"
-                android:text="Tracks"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/imageButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"></TextView>
-
-
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@color/lightGrey"
-                android:elevation="5dp"
-                android:src="@drawable/ic_plus"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_goneMarginEnd="38dp"></ImageButton>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:background="@color/darkGrey"-->
+<!--    tools:context=".MainActivity">-->
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/linearLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="68dp"-->
+<!--        android:background="@color/lightGrey"-->
+<!--        android:elevation="8dp"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.008"-->
+<!--        android:gravity="left">-->
+
+<!--        &lt;!&ndash; Rewind Button &ndash;&gt;-->
+
+<!--        &lt;!&ndash; Record Button &ndash;&gt;-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/txtView"-->
+<!--            android:layout_width="175dp"-->
+<!--            android:layout_height="39dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_marginStart="20dp"-->
+<!--            android:text="Select instrument:"-->
+<!--            android:textSize="20dp" />-->
+
+<!--        <Spinner-->
+<!--            android:id="@+id/spinner"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:layout_alignBottom="@id/txtView" />-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/rewindButton"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_margin="8dp"-->
+<!--            android:background="@color/lightGrey"-->
+<!--            android:src="@drawable/ic_rewind">-->
+
+
+<!--        </ImageButton>-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/recordButton"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_margin="8dp"-->
+<!--            android:background="@color/lightGrey"-->
+<!--            android:src="@drawable/ic_record_button"-->
+<!--            android:padding="16dp">-->
+
+
+<!--        </ImageButton>-->
+
+<!--        &lt;!&ndash; Play Button &ndash;&gt;-->
+
+
+<!--        &lt;!&ndash; Placeholder View with Light Background &ndash;&gt;-->
+<!--        <ImageButton-->
+<!--            android:id="@+id/playButton"-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_margin="8dp"-->
+<!--            android:background="@color/lightGrey"-->
+<!--            android:padding="16dp"-->
+<!--            android:src="@drawable/ic_play_button">-->
+
+
+<!--        </ImageButton>-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:background="@color/lightGrey"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/linearLayout"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"/>-->
+
+
+
+<!--    </LinearLayout>-->
+
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="229dp"-->
+<!--        android:layout_height="337dp"-->
+<!--        android:layout_marginTop="1dp"-->
+<!--        android:background="@color/lightGrey"-->
+<!--        android:orientation="vertical"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/linearLayout"-->
+<!--        app:layout_constraintVertical_bias="1.0">-->
+
+
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="60dp"-->
+<!--            android:background="@drawable/bold_bottom_border"-->
+<!--            android:elevation="5dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintVertical_bias="0.162">-->
+
+
+<!--            <TextView-->
+<!--                android:id="@+id/TrackListText"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:elevation="6dp"-->
+<!--                android:fontFamily="sans-serif"-->
+<!--                android:gravity="center"-->
+<!--                android:text="Tracks"-->
+<!--                android:textSize="20sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:visibility="visible"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toStartOf="@+id/imageButton"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"></TextView>-->
+
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/imageButton"-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:background="@color/lightGrey"-->
+<!--                android:elevation="5dp"-->
+<!--                android:src="@drawable/ic_plus"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_goneMarginEnd="38dp"></ImageButton>-->
+
+<!--&lt;!&ndash;            <ListView&ndash;&gt;-->
+<!--&lt;!&ndash;                android:id="@+id/idLVLanguages"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_height="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                android:layout_below="@id/TrackListText"&ndash;&gt;-->
+<!--&lt;!&ndash;                />&ndash;&gt;-->
+
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->

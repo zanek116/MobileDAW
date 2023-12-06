@@ -7,21 +7,27 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ImageButton
+import android.widget.ListView
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.mobiledaw.Database.DAWDatabase
+import com.example.mobiledaw.Database.TrackData
 import com.example.mobiledaw.Instruments.DrumpadActivity
 import com.example.mobiledaw.Instruments.PianoActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    val pianoActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-            result: ActivityResult ->
-        if(result.resultCode == RESULT_CANCELED){
-            Log.d("MainActivity","Switch to Piano Activity Cancelled")
-        }else{
+    var trackId = 0
+
+    val pianoActivityLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        if (result.resultCode == RESULT_CANCELED) {
+            Log.d("MainActivity", "Switch to Piano Activity Cancelled")
+        } else {
             Log.d("MainActivity", "Switched to Piano activity")
 
         }
@@ -75,20 +81,52 @@ class MainActivity : AppCompatActivity() {
         }
 
         val recordedNotes = intent.getSerializableExtra("recordedNotes") as? Array<Pair<Int, Int>>
-
         if (recordedNotes != null) {
-            for ((buttonId, timeBetweenNotes) in recordedNotes) {
-                Log.d("RecordedNote", "Button ID: $buttonId, Time Between Notes: $timeBetweenNotes")
-            }
+            saveRecordedNotes(recordedNotes)
+            // Display recorded notes in the ListView
+            val listView = findViewById<ListView>(R.id.tracks)
+            val adapter = ArrayAdapter<Pair<Int, Int>>(
+                this,
+                android.R.layout.simple_list_item_1,
+                android.R.id.text1,
+                recordedNotes
+            )
+            listView.adapter = adapter
 
+        } else {
+            Log.d("Recorded Notes", "No recordedNotes found in the Intent")
         }
-        else {
-            Log.d("Recorded Notes", "nah bruh")
-        }
+
+
+
 
     }
+
+    private fun saveRecordedNotes(recordedNotes: Array<Pair<Int, Int>>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val dao = DAWDatabase.getDatabase(applicationContext).trackDao()
+            var trackId : Int = dao.getNextId()
+            if (trackId == null)
+            {
+                trackId = 0
+            }
+            else
+            {
+                trackId++
+            }
+
+            // Convert Pair<Int, Int> to RecordedNoteEntity and insert into the database
+            recordedNotes.forEach { pair ->
+                val first = pair.first
+                val second = pair.second
+                dao.insert(TrackData(first = first, second = second, track = trackId))
+            }
+        }
+    }
+
+
     private fun startPiano(){
-        val pianoActivityIntent: Intent = Intent(this,PianoActivity::class.java)
+        val pianoActivityIntent: Intent = Intent(this, PianoActivity::class.java)
         pianoActivityLauncher.launch(pianoActivityIntent)
 
     }
@@ -98,8 +136,6 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-
-
 }
 
 

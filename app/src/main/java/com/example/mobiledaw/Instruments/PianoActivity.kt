@@ -223,9 +223,18 @@ class PianoActivity : AppCompatActivity() {
         }
     }
 
-    private fun returnHome(){
-        val homeActivityIntent: Intent = Intent(this,MainActivity::class.java)
-        homeActivityLauncher.launch(homeActivityIntent)
+//    private fun returnHome(){
+//        val homeActivityIntent: Intent = Intent(this,MainActivity::class.java)
+//
+//        homeActivityLauncher.launch(homeActivityIntent)
+//    }
+
+    private fun returnHome() {
+        val homeActivityIntent: Intent = Intent(this, MainActivity::class.java)
+        homeActivityIntent.putExtra("recordedNotes", recordedNotes.toTypedArray())
+        //setResult(RESULT_OK, homeActivityIntent)
+        //finish() // Finish the PianoActivity to go back to MainActivity
+        startActivity(homeActivityIntent)
     }
 
     private fun saveTrack()
