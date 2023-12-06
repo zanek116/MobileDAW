@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "991370671606",
+    "project_id": "mobiledaw-6e0d2",
+    "storage_bucket": "mobiledaw-6e0d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:991370671606:android:eccfcbc1b4ff220581c3d7",
+        "android_client_info": {
+          "package_name": "com.example.mobiledaw"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaBME_U3rgfQ9_rXwdOtNZoGLNXGE-c2o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
