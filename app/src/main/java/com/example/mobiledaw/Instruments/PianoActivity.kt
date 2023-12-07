@@ -114,6 +114,7 @@ class PianoActivity : AppCompatActivity() {
 
     private fun playSound(buttonId: Int) {
         val soundId = soundMap[buttonId] ?: return
+        Log.e("soundId", soundId.toString())
         val currentTime = System.currentTimeMillis()
 
         if (isRecording) {
@@ -124,7 +125,6 @@ class PianoActivity : AppCompatActivity() {
         }
 
         val streamId = soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-
         val shorterDuration = 300
         Handler().postDelayed({
             soundPool.stop(streamId)
@@ -183,6 +183,7 @@ class PianoActivity : AppCompatActivity() {
     private fun getFirstOctave(octave: Int, note: String): Int {
         val note2: String = "$note$octave"
         val resId = resources.getIdentifier(note2, "raw", packageName)
+        Log.e("here", resId.toString())
         return resId
     }
 

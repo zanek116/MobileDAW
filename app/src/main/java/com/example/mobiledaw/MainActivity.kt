@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     var track4Index = 0
     private lateinit var soundPool: SoundPool
     private var soundMap: Map<Int, Int> = mutableMapOf()
+    private var currentOctave: Int = 3 // Initial octave
 
 
     val pianoActivityLauncher =
@@ -127,16 +128,21 @@ class MainActivity : AppCompatActivity() {
         val recordedNotes = intent.getSerializableExtra("recordedNotes") as? Array<Pair<Int, Int>>
         if (recordedNotes!=null){
             saveRecordedNotes(recordedNotes)
-        }
-        else
-        {
+            // Display recorded notes in the ListView
+            val listView = findViewById<ListView>(R.id.tracks)
+            val adapter = ArrayAdapter<Pair<Int, Int>>(
+                this,
+                android.R.layout.simple_list_item_1,
+                android.R.id.text1,
+                recordedNotes
+            )
+            listView.adapter = adapter
+
+        } else {
             Log.d("Recorded Notes", "No recordedNotes found in the Intent")
         }
 
-
-
-
-
+        loadSounds()
         populateList()
         separateTracks()
 
@@ -152,6 +158,82 @@ class MainActivity : AppCompatActivity() {
             playTrack(actualTrack3,3)
             playTrack(actualTrack4,4)}
 
+    }
+
+    private fun loadSounds() {
+
+
+        soundMap = mapOf(
+            R.id.button1 to soundPool.load(this, getFirstOctave(currentOctave, "c"), 1),
+            R.id.button2 to soundPool.load(this, getFirstOctave(currentOctave, "d"), 1),
+            R.id.button3 to soundPool.load(this, getFirstOctave(currentOctave, "e"), 1),
+            R.id.button4 to soundPool.load(this, getFirstOctave(currentOctave, "f"), 1),
+            R.id.button5 to soundPool.load(this, getFirstOctave(currentOctave, "g"), 1),
+            R.id.button6 to soundPool.load(this, getFirstOctave(currentOctave, "a"), 1),
+            R.id.button7 to soundPool.load(this, getFirstOctave(currentOctave, "b"), 1),
+            R.id.button8 to soundPool.load(this, getSecondOctave(currentOctave, "c"), 1),
+            R.id.button9 to soundPool.load(this, getSecondOctave(currentOctave, "d"), 1),
+            R.id.button10 to soundPool.load(this, getSecondOctave(currentOctave, "e"), 1),
+            R.id.button11 to soundPool.load(this, getSecondOctave(currentOctave, "f"), 1),
+            R.id.button12 to soundPool.load(this, getSecondOctave(currentOctave, "g"), 1),
+            R.id.button13 to soundPool.load(this, getSecondOctave(currentOctave, "a"), 1),
+            R.id.button14 to soundPool.load(this, getSecondOctave(currentOctave, "b"), 1),
+
+            R.id.blackButton1 to soundPool.load(this, getFirstOctave(currentOctave, "db"), 1),
+            R.id.blackButton2 to soundPool.load(this, getFirstOctave(currentOctave, "eb"), 1),
+            R.id.blackButton3 to soundPool.load(this, getFirstOctave(currentOctave, "gb"), 1),
+            R.id.blackButton4 to soundPool.load(this, getFirstOctave(currentOctave, "ab"), 1),
+            R.id.blackButton5 to soundPool.load(this, getFirstOctave(currentOctave, "bb"), 1),
+            R.id.blackButton6 to soundPool.load(this, getSecondOctave(currentOctave, "db"), 1),
+            R.id.blackButton7 to soundPool.load(this, getSecondOctave(currentOctave, "eb"), 1),
+            R.id.blackButton8 to soundPool.load(this, getSecondOctave(currentOctave, "gb"), 1),
+            R.id.blackButton9 to soundPool.load(this, getSecondOctave(currentOctave, "ab"), 1),
+            R.id.blackButton10 to soundPool.load(this, getSecondOctave(currentOctave, "bb"), 1)
+
+        )
+//        Log.e("loading sound ",  getFirstOctave(currentOctave, "c").toString())
+//                soundPool.load(this, getFirstOctave(currentOctave, "d"), 1)
+//        Log.e("loading sound ",  getFirstOctave(currentOctave, "d").toString())
+//                soundPool.load(this, getFirstOctave(currentOctave, "e"), 1)
+//                soundPool.load(this, getFirstOctave(currentOctave, "f"), 1)
+//                soundPool.load(this, getFirstOctave(currentOctave, "g"), 1)
+//                soundPool.load(this, getFirstOctave(currentOctave, "a"), 1)
+//                soundPool.load(this, getFirstOctave(currentOctave, "b"), 1)
+//                soundPool.load(this, getSecondOctave(currentOctave, "c"), 1)
+//                soundPool.load(this, getSecondOctave(currentOctave, "d"), 1)
+//                soundPool.load(this, getSecondOctave(currentOctave, "e"), 1)
+//                soundPool.load(this, getSecondOctave(currentOctave, "f"), 1)
+//                soundPool.load(this, getSecondOctave(currentOctave, "g"), 1)
+//                soundPool.load(this, getSecondOctave(currentOctave, "a"), 1)
+//                soundPool.load(this, getSecondOctave(currentOctave, "b"), 1)
+//
+//                soundPool.load(this, getFirstOctave(currentOctave, "db"), 1)
+//                soundPool.load(this, getFirstOctave(currentOctave, "eb"), 1)
+//        Log.e("loading sound ",  getFirstOctave(currentOctave, "eb").toString())
+//                soundPool.load(this, getFirstOctave(currentOctave, "gb"), 1)
+//                soundPool.load(this, getFirstOctave(currentOctave, "ab"), 1)
+//                soundPool.load(this, getFirstOctave(currentOctave, "bb"), 1)
+//                soundPool.load(this, getSecondOctave(currentOctave, "db"), 1)
+//                soundPool.load(this, getSecondOctave(currentOctave, "eb"), 1)
+//                soundPool.load(this, getSecondOctave(currentOctave, "gb"), 1)
+//        Log.e("loading sound ",  getSecondOctave(currentOctave, "gb").toString())
+//                soundPool.load(this, getSecondOctave(currentOctave, "ab"), 1)
+//                soundPool.load(this, getSecondOctave(currentOctave, "bb"), 1)
+//
+}
+
+
+    private fun getFirstOctave(octave: Int, note: String): Int {
+        val note2: String = "$note$octave"
+        val resId = resources.getIdentifier(note2, "raw", packageName)
+        return resId
+    }
+
+    private fun getSecondOctave(octave: Int, note: String): Int {
+        val secondOctave: Int = octave + 1
+        val note2: String = "$note$secondOctave"
+        val resId = resources.getIdentifier(note2, "raw", packageName)
+        return resId
     }
 
     override fun onResume() {
@@ -327,6 +409,7 @@ class MainActivity : AppCompatActivity() {
 
                     Handler().postDelayed({
                         playSound(noteId)
+                        Log.e("track4sound", "reached track4 playback " + noteId.toString())
                         track4Index++
                         playNextRecordedNote(track, 4)
                     }, timeBetweenNotes.toLong())
@@ -349,6 +432,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun playTrack(track: Array<Pair<Int, Int>>, trackNumber: Int) {
+
+        track1Index = 0
+        track2Index = 0
+        track3Index = 0
+        track4Index = 0
+
+
         when (trackNumber) {
             1 -> playNextRecordedNote(track, 1)
             2 -> playNextRecordedNote(track, 2)
@@ -361,6 +451,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun playSound(buttonId: Int) {
         val soundId = soundMap[buttonId] ?: return
+        Log.e("soundId", soundId.toString())
         val currentTime = System.currentTimeMillis()
 
 
