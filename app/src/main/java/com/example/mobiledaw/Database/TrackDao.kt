@@ -16,6 +16,6 @@ interface TrackDao {
     @Query("SELECT third FROM data_table ORDER BY id DESC LIMIT 1")
     suspend fun getNextId(): Int
 
-    @Query("SELECT DISTINCT third FROM data_table GROUP BY third")
+    @Query("SELECT DISTINCT third FROM data_table")
     suspend fun getTitles(): List<Int>
 }

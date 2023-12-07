@@ -125,22 +125,19 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         val recordedNotes = intent.getSerializableExtra("recordedNotes") as? Array<Pair<Int, Int>>
-        if (recordedNotes != null) {
+        if (recordedNotes!=null){
             saveRecordedNotes(recordedNotes)
-            // Display recorded notes in the ListView
-            val listView = findViewById<ListView>(R.id.tracks)
-            val adapter = ArrayAdapter<Pair<Int, Int>>(
-                this,
-                android.R.layout.simple_list_item_1,
-                android.R.id.text1,
-                recordedNotes
-            )
-            listView.adapter = adapter
-
-        } else {
+        }
+        else
+        {
             Log.d("Recorded Notes", "No recordedNotes found in the Intent")
         }
 
+
+
+
+
+        populateList()
         separateTracks()
 
         track1Index = 0
@@ -156,6 +153,42 @@ class MainActivity : AppCompatActivity() {
             playTrack(actualTrack4,4)}
 
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Your function or code to be executed when the activity resumes
+        populateList()
+    }
+
+    private fun populateList()
+    {
+        CoroutineScope(Dispatchers.IO).launch {
+            val dao = DAWDatabase.getDatabase(applicationContext).trackDao()
+            val noteList = dao.getTitles()
+
+                val listView = findViewById<ListView>(R.id.tracks)
+
+                // Convert List<Int> to List<String>
+                val stringList = noteList.map { it.toString() }
+
+                // Use ArrayAdapter<String> instead of ArrayAdapter<Int>
+                val adapter = ArrayAdapter<String>(
+                    this@MainActivity,
+                    android.R.layout.simple_list_item_1,
+                    android.R.id.text1,
+                    stringList
+                )
+
+                listView.adapter = adapter
+        }
+    }
+
+
+
+
+
+
 
     private fun saveRecordedNotes(recordedNotes: Array<Pair<Int, Int>>) {
         CoroutineScope(Dispatchers.IO).launch {
