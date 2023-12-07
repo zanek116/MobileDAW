@@ -38,7 +38,7 @@ class PianoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.piano)
 
-
+        
 
         // Initialize SoundPool
         val audioAttributes = AudioAttributes.Builder()
@@ -239,11 +239,14 @@ class PianoActivity : AppCompatActivity() {
 
     private fun saveTrack()
     {
+        Log.d("here", "start of ST")
         val homeActivityTrackIntent: Intent = Intent(this, MainActivity::class.java)
         homeActivityTrackIntent.putExtra("recordedNotes", recordedNotes.toTypedArray()) // Convert the MutableList to a List
         //homeActivityLauncher.launch(homeActivityTrackIntent)
         //setResult(RESULT_OK, intent)
-        //finish() // Finish the current activity
-        startActivity(homeActivityTrackIntent)
+        // startActivity(homeActivityTrackIntent
+        homeActivityLauncher.launch(homeActivityTrackIntent)
+        finish()
+
     }
 }
